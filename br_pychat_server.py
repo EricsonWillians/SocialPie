@@ -23,7 +23,6 @@
 
 import threading
 import socketserver
-import socket
 
 CONNECTION_PORT = 9311
 
