@@ -29,7 +29,6 @@ CONNECTION_PORT = 9311
 if __name__ == '__main__':
     print("Chat Display Project initiated.")
     HOST = input("Please provide an IP Address: ")
-    done = False
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((HOST, CONNECTION_PORT))
     while 1:
