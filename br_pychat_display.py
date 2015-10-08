@@ -27,11 +27,11 @@ import socket
 CONNECTION_PORT = 9311
 
 if __name__ == '__main__':
-	print("Chat Display Project initiated.")
-	HOST = input("Please provide an IP Address: ")
-	done = False
-	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	sock.connect((HOST, CONNECTION_PORT))
-	while 1:
-		received = str(sock.recv(10000), "utf-8")
-		print(received)
+    print("Chat Display Project initiated.")
+    HOST = input("Please provide an IP Address: ")
+    done = False
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((HOST, CONNECTION_PORT))
+    while 1:
+        received = str(sock.recv(10000), "utf-8")
+        print(received)

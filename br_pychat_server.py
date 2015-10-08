@@ -29,32 +29,32 @@ CONNECTION_PORT = 9311
 connections = {}
 
 class TCPHandler(socketserver.BaseRequestHandler):
-	
-	def handle(self):
-		try:
-			cur_thread = threading.current_thread()
-			print("'{ip}' requested connection.".format(ip = self.client_address[0]))
-			print("Connection request granted.")
-			if threading.activeCount() > 3:
-				print("Number of current client connections: {n}".format(n = threading.activeCount() - 3))
-			if self.client_address[0] not in connections.keys():
-				connections[self.client_address[0]] = self.request
-			while 1:
-				received_from_client = self.request.recv(10000)
-				for connection in connections:
-					connections[connection].sendall(bytes("'{ip}': {data}".format(ip = self.client_address[0], data = received_from_client), "utf-8"))
-		except ConnectionResetError:
-			pass
+    
+    def handle(self):
+        try:
+            cur_thread = threading.current_thread()
+            print("'{ip}' requested connection.".format(ip = self.client_address[0]))
+            print("Connection request granted.")
+            if threading.activeCount() > 3:
+                print("Number of current client connections: {n}".format(n = threading.activeCount() - 3))
+            if self.client_address[0] not in connections.keys():
+                connections[self.client_address[0]] = self.request
+            while 1:
+                received_from_client = self.request.recv(10000)
+                for connection in connections:
+                    connections[connection].sendall(bytes("'{ip}': {data}".format(ip = self.client_address[0], data = received_from_client), "utf-8"))
+        except ConnectionResetError:
+            pass
 
 class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 if __name__ == '__main__':
-	HOST  = "localhost"
-	print("Chat Server Project initiated.")
-	print("Waiting for incoming connection requests...")
-	server = TCPServer((HOST, CONNECTION_PORT), TCPHandler)
-	server_thread = threading.Thread(target = server.serve_forever)
-	server_thread.daemon = True
-	server_thread.start()
+    HOST  = "localhost"
+    print("Chat Server Project initiated.")
+    print("Waiting for incoming connection requests...")
+    server = TCPServer((HOST, CONNECTION_PORT), TCPHandler)
+    server_thread = threading.Thread(target = server.serve_forever)
+    server_thread.daemon = True
+    server_thread.start()
 
