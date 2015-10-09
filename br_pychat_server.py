@@ -50,7 +50,7 @@ class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
     pass
 
 if __name__ == '__main__':
-    HOST  = "localhost"
+    HOST  = ""
     print("Chat Server Project initiated.")
     print("Waiting for incoming connection requests...")
     server = TCPServer((HOST, CONNECTION_PORT), TCPHandler)
