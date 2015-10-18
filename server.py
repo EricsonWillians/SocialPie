@@ -55,6 +55,5 @@ if __name__ == '__main__':
     print("Waiting for incoming connection requests...")
     server = TCPServer((HOST, CONNECTION_PORT), TCPHandler)
     server_thread = threading.Thread(target = server.serve_forever)
-    server_thread.daemon = True
     server_thread.start()
 
