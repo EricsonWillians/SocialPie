@@ -1,5 +1,5 @@
 
-#  br_pychat_client.py
+#  client.py
 #  
 #  Copyright 2015 Ericson Willians (Rederick Deathwill) <EricsonWRP@ERICSONWRP-PC>
 #  
