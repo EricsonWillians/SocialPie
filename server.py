@@ -27,33 +27,42 @@ import socketserver
 CONNECTION_PORT = 9311
 
 connections = {}
+socket_counter = 0
 
 class TCPHandler(socketserver.BaseRequestHandler):
-    
-    def handle(self):
-        try:
-            cur_thread = threading.current_thread()
-            print("'{ip}' requested connection.".format(ip = self.client_address[0]))
-            print("Connection request granted.")
-            if threading.activeCount() > 3:
-                print("Number of current client connections: {n}".format(n = threading.activeCount() - 3))
-            if self.client_address[0] not in connections.keys():
-                connections[self.client_address[0]] = self.request
-            while 1:
-                received_from_client = self.request.recv(10000)
-                for connection in connections:
-                    connections[connection].sendall(bytes("'{ip}': {data}".format(ip = self.client_address[0], data = received_from_client), "utf-8"))
-        except ConnectionResetError:
-            pass
+	
+	def handle(self):
+		try:
+			cur_thread = threading.current_thread()
+			print("'{ip}' requested connection.".format(ip = self.client_address[0]))
+			print("Connection request granted.")
+			if threading.activeCount() > 3:
+				print("Number of current client connections: {n}".format(n = threading.activeCount() - 3))
+			global socket_counter
+			connections[self.client_address[0] + "({counter})".format(counter = socket_counter)] = self.request
+			socket_counter += 1
+			print(connections)
+			while 1:
+				received_from_client = self.request.recv(10000).decode("utf-8")
+				for connection in connections:
+					try:
+						msg = "{ip}: {data}".format(ip = self.client_address[0], data = received_from_client)
+						print(msg)
+						connections[connection].sendall(bytes(msg, "utf-8"))
+					except Exception as e:
+						print(str(e))
+		except ConnectionResetError:
+			pass
 
 class TCPServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
-    pass
+	pass
 
 if __name__ == '__main__':
-    HOST  = ""
-    print("Chat Server Project initiated.")
-    print("Waiting for incoming connection requests...")
-    server = TCPServer((HOST, CONNECTION_PORT), TCPHandler)
-    server_thread = threading.Thread(target = server.serve_forever)
-    server_thread.start()
+	HOST = ""
+	print("Social Pie Server initiated.")
+	print("Waiting for incoming connection requests...")
+	server = TCPServer((HOST, CONNECTION_PORT), TCPHandler)
+	server_thread = threading.Thread(target = server.serve_forever)
+	server_thread.start()
+	
 
