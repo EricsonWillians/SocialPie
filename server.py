@@ -21,6 +21,7 @@
 #  
 #  
 
+import json
 import threading
 import socketserver
 
@@ -41,13 +42,11 @@ class TCPHandler(socketserver.BaseRequestHandler):
 			global socket_counter
 			connections[self.client_address[0] + "({counter})".format(counter = socket_counter)] = self.request
 			socket_counter += 1
-			print(connections)
 			while 1:
-				received_from_client = self.request.recv(10000).decode("utf-8")
+				received_from_client = json.loads(self.request.recv(10000).decode("utf-8"))
 				for connection in connections:
 					try:
-						msg = "{ip}: {data}".format(ip = self.client_address[0], data = received_from_client)
-						print(msg)
+						msg = "{user}: {data}".format(user = received_from_client["user"], data = received_from_client["data"][:-1])
 						connections[connection].sendall(bytes(msg, "utf-8"))
 					except Exception as e:
 						print(str(e))
