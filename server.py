@@ -1,6 +1,6 @@
 
 #
-#  br_pychat_server.py
+#  server.py
 #  
 #  Copyright 2015 Ericson Willians (Rederick Deathwill) <EricsonWRP@ERICSONWRP-PC>
 #  
