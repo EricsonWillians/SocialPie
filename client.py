@@ -23,7 +23,7 @@
 import os
 import json
 import socket
-import tkinter as tk
+import tkinter as tk	
 import threading
 
 CONNECTION_PORT = 9311
@@ -52,6 +52,7 @@ class App(Serializable, threading.Thread):
 				"HOST": "127.0.0.1",
 				"NICKNAME": "Unknown User"
 			}
+		self.is_running = True
 		self.write("user.cfg")		
 		threading.Thread.__init__(self)
 		self.start()
@@ -66,9 +67,6 @@ class App(Serializable, threading.Thread):
 		json_data.close()
 		return self.data
 	
-	def callback(self):
-		self.root.quit()
-		
 	def center(self, win):
 		win.update_idletasks()
 		width = win.winfo_width()
@@ -79,7 +77,7 @@ class App(Serializable, threading.Thread):
 		
 	def run(self):
 		self.root = tk.Tk()
-		self.root.protocol("WM_DELETE_WINDOW", self.callback)
+		self.root.protocol("WM_DELETE_WINDOW", self.quit)
 		self.root.title("Social Pie Client")
 		self.root.grid()
 		self.root.grid_columnconfigure(0, weight=1)
@@ -91,6 +89,10 @@ class App(Serializable, threading.Thread):
 		self.center(self.root)
 		self.root.mainloop()
 	
+	def quit(self):
+		self.is_running = False
+		self.root.destroy()
+
 	def create_widgets(self):
 		self.console = tk.Text(self.root, bg="#000", fg="#0F0", highlightcolor="#F00", highlightthickness=2)
 		self.console.grid(column=0, row=0, padx=25, pady=10, sticky=tk.W+tk.E)
@@ -101,7 +103,7 @@ class App(Serializable, threading.Thread):
 		self.msg_area.bind("<Return>", self.send)
 		self.connect_button = tk.Button(self.root, text="Connect", command=self.connect)
 		self.connect_button.grid(column=0, row=3, padx=30, pady=10, sticky=tk.W)
-		self.quit_button = tk.Button(self.root, text="Exit", command=self.root.quit)
+		self.quit_button = tk.Button(self.root, text="Exit", command=self.quit)
 		self.quit_button.grid(column=0, row=3, padx=110, pady=10, sticky=tk.W)
 	
 	def send(self, x=None):
@@ -132,7 +134,7 @@ class App(Serializable, threading.Thread):
 
 if __name__ == '__main__':
 	app = App()
-	while 1:
+	while app.is_running:
 		try:
 			received = app.sock.recv(10000).decode("utf-8")
 			app.console.insert(tk.END, "{msg}\n".format(msg = received))
